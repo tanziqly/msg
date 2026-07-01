@@ -1,15 +1,15 @@
-import { Geist, Geist_Mono } from "next/font/google"
+import { Geist } from "next/font/google"
+import type { Metadata } from "next"
 
 import "@workspace/ui/globals.css"
-import { ThemeProvider } from "@/components/theme-provider"
-import { cn } from "@workspace/ui/lib/utils";
+import { cn } from "@workspace/ui/lib/utils"
 
-const geist = Geist({subsets:['latin'],variable:'--font-sans'})
+const geist = Geist({ subsets: ["latin"], variable: "--font-sans" })
 
-const fontMono = Geist_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-})
+export const metadata: Metadata = {
+  title: "MSG — Инвестиционный фонд в сфере здравоохранения",
+  description: "Инвестиционный фонд, работающий в сфере медицины и здравоохранения. Поиск, покупка и продажа перспективных активов, глубокий анализ и стратегическое управление.",
+}
 
 export default function RootLayout({
   children,
@@ -17,14 +17,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html
-      lang="en"
-      suppressHydrationWarning
-      className={cn("antialiased", fontMono.variable, "font-sans", geist.variable)}
-    >
-      <body>
-        <ThemeProvider>{children}</ThemeProvider>
-      </body>
+    <html lang="ru" className={cn("antialiased", geist.variable, "font-sans")}>
+      <body>{children}</body>
     </html>
   )
 }
