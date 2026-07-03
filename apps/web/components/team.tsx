@@ -76,9 +76,7 @@ const workSlides = [
 
 const VARIANTS = [
   { id: 1, label: "1. Классика + галерея" },
-  { id: 2, label: "2. Мозаика и компетенции" },
-  { id: 3, label: "3. Горизонтальный слайдер" },
-  { id: 4, label: "4. Лента и компетенции" },
+  { id: 2, label: "2. Горизонтальный слайдер" },
 ] as const
 
 type VariantId = (typeof VARIANTS)[number]["id"]
@@ -87,7 +85,7 @@ export function Team() {
   const [variant, setVariant] = useState<VariantId>(1)
 
   return (
-    <section id="team" className="bg-white py-28 lg:py-36">
+    <section id="team" className="bg-white pt-16 pb-28 lg:pt-20 lg:pb-36">
       {/* Временный переключатель для демонстрации вариантов заказчику */}
       <div className="sticky top-2 z-30 mb-14 flex justify-center px-6">
         <div className="flex flex-wrap items-center justify-center gap-1 rounded-full border border-slate-200 bg-white/95 p-1.5 shadow-lg shadow-slate-900/5 backdrop-blur">
@@ -128,9 +126,7 @@ export function Team() {
         </Animate>
 
         {variant === 1 && <VariantClassic />}
-        {variant === 2 && <VariantMosaic />}
-        {variant === 3 && <VariantCards />}
-        {variant === 4 && <VariantCarousel />}
+        {variant === 2 && <VariantCards />}
       </div>
     </section>
   )
@@ -195,86 +191,7 @@ function VariantClassic() {
 }
 
 /* ---------------------------------------------------------------- */
-/* Вариант 2 — мозаика рабочих фото и короткие компетенции по наведению */
-/* ---------------------------------------------------------------- */
-
-function VariantMosaic() {
-  return (
-    <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_1.15fr]">
-      <Animate direction="left" duration={0.9}>
-        <div className="relative h-[420px] lg:sticky lg:top-28 lg:h-[560px]">
-          <div
-            tabIndex={0}
-            className="group absolute top-0 left-0 h-[62%] w-[68%] overflow-hidden shadow-xl focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none"
-          >
-            <img
-              src={gallery[8]}
-              alt="Команда за работой"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            />
-            <CompetencyChips
-              points={expertCompetencies[0].points.slice(0, 2)}
-            />
-          </div>
-          <div
-            tabIndex={0}
-            className="group absolute right-0 bottom-0 h-[54%] w-[58%] overflow-hidden border-4 border-white shadow-xl focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none"
-          >
-            <img
-              src={gallery[2]}
-              alt="Команда за работой"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            />
-            <CompetencyChips
-              points={expertCompetencies[2].points.slice(0, 2)}
-            />
-          </div>
-          <div
-            tabIndex={0}
-            className="group absolute top-[8%] right-[2%] h-[34%] w-[34%] overflow-hidden border-4 border-white shadow-lg focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none"
-          >
-            <img
-              src={gallery[12]}
-              alt="Команда за работой"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            />
-            <CompetencyChips
-              points={expertCompetencies[3].points.slice(0, 1)}
-            />
-          </div>
-        </div>
-      </Animate>
-
-      <div className="flex flex-col divide-y divide-slate-100">
-        {expertCompetencies.map((group, i) => (
-          <Animate key={group.title} delay={i * 100} direction="right">
-            <div className="py-7 first:pt-0">
-              <p className="mb-2 text-[11px] font-semibold tracking-[0.24em] text-blue-600 uppercase">
-                {group.eyebrow}
-              </p>
-              <h3 className="mb-4 text-xl font-medium text-slate-900">
-                {group.title}
-              </h3>
-              <div className="flex flex-wrap gap-2">
-                {group.points.slice(0, 3).map((p) => (
-                  <span
-                    key={p}
-                    className="border border-slate-200 px-3 py-1.5 text-xs leading-5 text-slate-600"
-                  >
-                    {p}
-                  </span>
-                ))}
-              </div>
-            </div>
-          </Animate>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-/* ---------------------------------------------------------------- */
-/* Вариант 3 — горизонтальный слайдер: одна командная фото и компетенции поверх */
+/* Вариант 2 — горизонтальный слайдер: одна командная фото и компетенции поверх */
 /* ---------------------------------------------------------------- */
 
 function VariantCards() {
@@ -422,127 +339,3 @@ function CompetencyChips({ points }: { points: string[] }) {
   )
 }
 
-/* ---------------------------------------------------------------- */
-/* Вариант 4 — слайдер компетенций и горизонтальная лента рабочих фото */
-/* ---------------------------------------------------------------- */
-
-function VariantCarousel() {
-  const [index, setIndex] = useState(0)
-  const group = expertCompetencies[index]!
-  const slide = workSlides[index % workSlides.length]!
-  const prev = () =>
-    setIndex(
-      (i) => (i - 1 + expertCompetencies.length) % expertCompetencies.length
-    )
-  const next = () => setIndex((i) => (i + 1) % expertCompetencies.length)
-
-  return (
-    <div>
-      <div className="relative mb-10 grid grid-cols-1 items-center gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
-        <div className="relative aspect-[16/10] overflow-hidden bg-slate-100">
-          <AnimatePresence mode="wait">
-            <motion.img
-              key={slide.src}
-              src={slide.src}
-              alt="Команда фонда за работой"
-              initial={{ opacity: 0, scale: 1.04 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-              className="h-full w-full object-cover"
-            />
-          </AnimatePresence>
-        </div>
-
-        <div className="min-h-[280px]">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={group.title}
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -16 }}
-              transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            >
-              <span className="mb-3 inline-block bg-blue-50 px-2.5 py-1 text-[10px] font-semibold tracking-wider text-blue-600 uppercase">
-                {group.eyebrow}
-              </span>
-              <h3 className="mb-8 text-2xl font-medium text-blue-600">
-                {group.title}
-              </h3>
-              <ul className="flex flex-col gap-3">
-                {group.points.map((p) => (
-                  <li
-                    key={p}
-                    className="flex items-start gap-3 text-base text-slate-700"
-                  >
-                    <span className="mt-1 shrink-0 text-blue-500">→</span>
-                    {p}
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-          </AnimatePresence>
-        </div>
-
-        <button
-          onClick={prev}
-          aria-label="Предыдущая компетенция"
-          className="absolute top-1/2 left-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-slate-200 bg-white text-slate-600 shadow-md transition-colors hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none lg:-left-5"
-        >
-          <ChevronLeft size={18} />
-        </button>
-        <button
-          onClick={next}
-          aria-label="Следующая компетенция"
-          className="absolute top-1/2 right-2 flex h-10 w-10 -translate-y-1/2 items-center justify-center border border-slate-200 bg-white text-slate-600 shadow-md transition-colors hover:bg-slate-50 focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:outline-none lg:-right-5"
-        >
-          <ChevronRight size={18} />
-        </button>
-      </div>
-
-      <div className="mb-20 flex items-center justify-center gap-2">
-        {expertCompetencies.map((item, i) => (
-          <button
-            key={item.title}
-            onClick={() => setIndex(i)}
-            aria-label={item.title}
-            className={`h-1.5 rounded-full transition-all duration-300 ${
-              i === index
-                ? "w-8 bg-blue-600"
-                : "w-1.5 bg-slate-200 hover:bg-slate-300"
-            }`}
-          />
-        ))}
-      </div>
-
-      <Animate>
-        <div className="mb-8 flex items-center gap-4">
-          <div className="h-0.5 w-8 bg-blue-600" />
-          <p className="text-[11px] font-semibold tracking-[0.3em] text-blue-600 uppercase">
-            Команда в работе
-          </p>
-        </div>
-      </Animate>
-      <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {gallery.map((src, i) => (
-          <button
-            key={src}
-            onClick={() => setIndex(i % expertCompetencies.length)}
-            className="group relative aspect-[4/3] w-[280px] shrink-0 snap-start overflow-hidden bg-slate-100 text-left sm:w-[340px]"
-          >
-            <img
-              src={src}
-              alt="Команда за работой"
-              className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-            />
-            <CompetencyChips
-              points={expertCompetencies[
-                i % expertCompetencies.length
-              ]!.points.slice(0, 2)}
-            />
-          </button>
-        ))}
-      </div>
-    </div>
-  )
-}

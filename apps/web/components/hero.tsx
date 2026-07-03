@@ -34,6 +34,7 @@ export function Hero() {
     <section className="relative min-h-[100dvh] bg-white flex flex-col overflow-hidden">
 
       {/* 1. Фото появляется первым — scale из 1.08 → 1 */}
+      {/* Фото Москва-Сити: Wikimedia Commons, автор Ludvig14, CC BY-SA 4.0 — https://commons.wikimedia.org/wiki/File:Moscow_Business_Center_5073-84.jpg */}
       <motion.div
         className="absolute inset-0"
         initial={{ opacity: 0, scale: 1.08 }}
@@ -41,8 +42,8 @@ export function Hero() {
         transition={{ duration: 1.4, ease: [0.25, 0.1, 0.25, 1] }}
       >
         <img
-          src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=1800&q=85&auto=format&fit=crop"
-          alt="Financial district"
+          src="/hero/moscow-city.jpg"
+          alt="Москва-Сити"
           className="w-full h-full object-cover object-center"
         />
       </motion.div>
