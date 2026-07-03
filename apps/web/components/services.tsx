@@ -65,7 +65,10 @@ const keyMetrics = [
 
 export function Services() {
   return (
-    <section id="services" className="bg-slate-50 pt-28 pb-16 lg:pt-36 lg:pb-20">
+    <section
+      id="services"
+      className="bg-slate-50 pt-28 pb-16 lg:pt-36 lg:pb-20"
+    >
       <div className="mx-auto max-w-[1400px] px-6 lg:px-16">
         <div className="mb-16 grid grid-cols-1 items-end gap-10 lg:grid-cols-2">
           <Animate direction="left">
@@ -146,7 +149,7 @@ export function Services() {
 
                   {/* Контент */}
                   <div
-                    className={`flex flex-col justify-center p-8 lg:p-10 ${i % 2 === 1 ? "lg:order-1 lg:pl-0" : ""}`}
+                    className={`m-8 flex flex-col justify-center p-2 lg:p-10 ${i % 2 === 1 ? "lg:order-1 lg:pl-0" : ""}`}
                   >
                     <span className="mb-4 font-mono text-xs text-slate-400">
                       {s.number}

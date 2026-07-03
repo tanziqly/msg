@@ -4,8 +4,7 @@ import { Animate } from "@/components/animate"
 import { motion, useScroll, useTransform } from "framer-motion"
 import { useRef } from "react"
 
-import document from "@/public/about/documents.png"
-import graphic from "@/public/about/graphic.jpg"
+import document from "@/public/about/team.jpg"
 import Image from "next/image"
 
 const stats = [
@@ -17,10 +16,12 @@ const stats = [
 
 export function About() {
   const sectionRef = useRef(null)
+
   const { scrollYProgress } = useScroll({
     target: sectionRef,
     offset: ["start end", "end start"],
   })
+
   const imgY = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"])
 
   return (
@@ -44,26 +45,30 @@ export function About() {
             <div>
               <h2
                 className="mb-8 leading-[1.1] font-light tracking-tight text-slate-900"
-                style={{ fontSize: "clamp(32px, 4vw, 56px)" }}
+                style={{ fontSize: "clamp(32px,4vw,56px)" }}
               >
-                Наш приоритет —<br />
+                Наш приоритет —
+                <br />
                 <span className="text-blue-600">
                   повышение стоимости
                   <br />
                   компаний
                 </span>
               </h2>
+
               <p className="mb-5 text-base leading-relaxed text-slate-600">
                 MSG — инвестиционный фонд, работающий в сфере медицины и
                 здравоохранения. Мы занимаемся поиском, покупкой и продажей
                 перспективных активов, глубоким анализом и оценкой бизнеса.
               </p>
+
               <p className="mb-10 text-base leading-relaxed text-slate-500">
                 Наш приоритет — повышение стоимости компаний и развитие
                 инновационных проектов в медицинской отрасли. Мы сопровождаем
                 сделки M&A, формируем стратегию роста и управляем портфельными
                 активами.
               </p>
+
               <a
                 href="#services"
                 className="inline-flex items-center gap-2 text-sm font-medium text-blue-600 transition-all duration-300 hover:gap-4"
@@ -82,40 +87,42 @@ export function About() {
             </div>
           </Animate>
 
-          {/* Фото с параллаксом */}
           <Animate direction="right" duration={0.9}>
-            <div className="relative h-[460px] overflow-hidden lg:h-[520px]">
-              <motion.div
-                className="absolute top-0 left-0 h-[63%] w-[70%] overflow-hidden shadow-xl"
-                style={{ y: imgY }}
-              >
-                <Image
-                  src={document}
-                  alt="Financial analysis"
-                  className="h-full w-full scale-110 object-cover"
-                />
-              </motion.div>
-              <div className="absolute right-0 bottom-0 h-[52%] w-[58%] overflow-hidden border-4 border-white shadow-xl">
-                <Image
-                  src={graphic}
-                  alt="Investment meeting"
-                  className="h-full w-full object-cover"
-                />
+            <div className="relative w-full">
+              {/* Контейнер с сохранением пропорций 16:9 */}
+              <div className="relative w-full pb-[56.25%]">
+                <motion.div
+                  style={{ y: imgY }}
+                  className="absolute inset-0 overflow-hidden rounded-sm shadow-2xl"
+                >
+                  <Image
+                    src={document}
+                    alt="Investment team"
+                    className="h-full w-full object-cover"
+                    priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </motion.div>
               </div>
+
               <motion.div
-                className="absolute bottom-10 left-0 w-[175px] bg-blue-600 p-6 text-white shadow-lg"
-                initial={{ opacity: 0, scale: 0.8 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                className="absolute right-4 -bottom-22 w-[140px] bg-blue-600 p-4 text-white shadow-2xl sm:right-6 sm:-bottom-22 sm:w-[160px] sm:p-5 md:right-8 md:-bottom-22 md:w-[180px] md:p-6 lg:-right-4 lg:-bottom-28 lg:w-[200px] lg:p-7"
+                initial={{ opacity: 0, y: 30, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{
                   duration: 0.6,
-                  delay: 0.4,
+                  delay: 0.35,
                   ease: [0.22, 1, 0.36, 1],
                 }}
               >
-                <p className="mb-1 text-3xl font-light">+43%</p>
-                <p className="text-xs leading-snug text-blue-200">
-                  рост рынка за последние три года
+                <p className="mb-1 text-2xl font-light sm:text-3xl md:text-4xl">
+                  +43%
+                </p>
+                <p className="text-xs leading-snug text-blue-100 sm:text-sm">
+                  рост рынка
+                  <br />
+                  за последние три года
                 </p>
               </motion.div>
             </div>
@@ -129,6 +136,7 @@ export function About() {
                 «Российский рынок коммерческой медицины демонстрирует CAGR 13% и
                 обладает уникальным потенциалом для консолидации и роста»
               </p>
+
               <p className="text-xs whitespace-nowrap text-slate-400">
                 Газпромбанк, 2026
               </p>
@@ -140,19 +148,25 @@ export function About() {
           {stats.map((s, i) => (
             <Animate key={s.label} delay={i * 120} direction="up">
               <div
-                className={`h-full px-8 py-10 ${i !== 0 ? "border-l border-slate-100" : ""} ${i >= 2 ? "border-t border-slate-100 md:border-t-0" : ""}`}
+                className={`h-full px-6 py-8 sm:px-8 sm:py-10 ${
+                  i !== 0 ? "border-l border-slate-100" : ""
+                } ${i >= 2 ? "border-t border-slate-100 md:border-t-0" : ""}`}
               >
                 <motion.p
                   className="mb-1 font-light tracking-tight text-slate-900"
-                  style={{ fontSize: "clamp(34px, 3.5vw, 50px)" }}
+                  style={{ fontSize: "clamp(28px,3.5vw,50px)" }}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.1 + i * 0.12 }}
+                  transition={{
+                    duration: 0.6,
+                    delay: 0.1 + i * 0.12,
+                  }}
                 >
                   {s.value}
                 </motion.p>
-                <p className="text-sm text-slate-500">{s.label}</p>
+
+                <p className="text-xs text-slate-500 sm:text-sm">{s.label}</p>
               </div>
             </Animate>
           ))}

@@ -58,7 +58,7 @@ const expertCompetencies = [
       "Контроль исполнения стратегических инициатив",
     ],
   },
-]
+] as const
 
 const gallery = Array.from(
   { length: 14 },
@@ -72,7 +72,7 @@ const workSlides = [
   { src: gallery[3]!, competencies: expertCompetencies[3]! },
   { src: gallery[4]!, competencies: expertCompetencies[4]! },
   { src: gallery[5]!, competencies: expertCompetencies[1]! },
-]
+] as const
 
 const VARIANTS = [
   { id: 1, label: "1. Классика + галерея" },
@@ -338,4 +338,3 @@ function CompetencyChips({ points }: { points: string[] }) {
     </div>
   )
 }
-
