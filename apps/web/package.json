@@ -10,7 +10,7 @@
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx}\"",
     "typecheck": "tsc --noEmit",
-    "bot": "node scripts/telegram-bot.mjs"
+    "bot": "node --env-file-if-exists=.env.local --env-file-if-exists=.env.development.local scripts/telegram-bot.mjs"
   },
   "dependencies": {
     "@workspace/ui": "workspace:*",
