@@ -1,6 +1,7 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "ui": "tui",
+  "globalEnv": ["TELEGRAM_BOT_TOKEN", "TELEGRAM_RECIPIENT_IDS"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],

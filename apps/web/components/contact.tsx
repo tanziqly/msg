@@ -1,8 +1,64 @@
 "use client"
 
+import { useState, type FormEvent } from "react"
+
 import { Animate } from "@/components/animate"
 
+type FormStatus = "idle" | "submitting" | "success" | "error"
+
+const inputClassName =
+  "border border-slate-200 px-4 py-3 text-sm text-slate-900 transition-colors placeholder:text-slate-300 focus:border-blue-400 focus:outline-none disabled:cursor-not-allowed disabled:bg-slate-100"
+
 export function Contact() {
+  const [status, setStatus] = useState<FormStatus>("idle")
+  const [feedback, setFeedback] = useState("")
+
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    if (status === "submitting") return
+
+    const form = event.currentTarget
+    const formData = new FormData(form)
+
+    setStatus("submitting")
+    setFeedback("")
+
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          company: formData.get("company"),
+          message: formData.get("message"),
+          website: formData.get("website"),
+        }),
+      })
+      const result = (await response.json()) as {
+        success?: boolean
+        error?: string
+      }
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Не удалось отправить заявку.")
+      }
+
+      form.reset()
+      setStatus("success")
+      setFeedback("Заявка отправлена. Мы свяжемся с вами в ближайшее время.")
+    } catch (error) {
+      setStatus("error")
+      setFeedback(
+        error instanceof Error
+          ? error.message
+          : "Не удалось отправить заявку. Попробуйте ещё раз.",
+      )
+    }
+  }
+
+  const isSubmitting = status === "submitting"
+
   return (
     <section id="contact" className="bg-slate-900 py-20 sm:py-28 lg:py-36">
       <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-16">
@@ -31,7 +87,7 @@ export function Contact() {
                   {
                     label: "Email",
                     value: "General@msgco.ru",
-                    href: "mailto:General @msgco.ru",
+                    href: "mailto:General@msgco.ru",
                   },
                   {
                     label: "Телефон",
@@ -72,59 +128,109 @@ export function Contact() {
           <Animate direction="right">
             <form
               className="flex min-w-0 flex-col gap-5 bg-white p-5 sm:p-8 lg:p-10"
-              onSubmit={(e) => e.preventDefault()}
+              onSubmit={handleSubmit}
             >
               <h3 className="mb-2 text-xl font-medium text-slate-900">
                 Оставьте заявку
               </h3>
+              <div className="absolute -left-[9999px]" aria-hidden="true">
+                <label htmlFor="contact-website">Сайт</label>
+                <input
+                  id="contact-website"
+                  name="website"
+                  type="text"
+                  tabIndex={-1}
+                  autoComplete="off"
+                />
+              </div>
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs tracking-wide text-slate-500 uppercase">
+                  <label
+                    htmlFor="contact-name"
+                    className="text-xs tracking-wide text-slate-500 uppercase"
+                  >
                     Имя
                   </label>
                   <input
+                    id="contact-name"
+                    name="name"
                     type="text"
+                    required
+                    maxLength={100}
+                    autoComplete="name"
                     placeholder="Иван Иванов"
-                    className="border border-slate-200 px-4 py-3 text-sm text-slate-900 transition-colors placeholder:text-slate-300 focus:border-blue-400 focus:outline-none"
+                    disabled={isSubmitting}
+                    className={inputClassName}
                   />
                 </div>
                 <div className="flex flex-col gap-2">
-                  <label className="text-xs tracking-wide text-slate-500 uppercase">
+                  <label
+                    htmlFor="contact-email"
+                    className="text-xs tracking-wide text-slate-500 uppercase"
+                  >
                     Email
                   </label>
                   <input
+                    id="contact-email"
+                    name="email"
                     type="email"
+                    required
+                    maxLength={254}
+                    autoComplete="email"
                     placeholder="ivan@company.ru"
-                    className="border border-slate-200 px-4 py-3 text-sm text-slate-900 transition-colors placeholder:text-slate-300 focus:border-blue-400 focus:outline-none"
+                    disabled={isSubmitting}
+                    className={inputClassName}
                   />
                 </div>
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-xs tracking-wide text-slate-500 uppercase">
+                <label
+                  htmlFor="contact-company"
+                  className="text-xs tracking-wide text-slate-500 uppercase"
+                >
                   Компания
                 </label>
                 <input
+                  id="contact-company"
+                  name="company"
                   type="text"
+                  maxLength={150}
+                  autoComplete="organization"
                   placeholder="Название организации"
-                  className="border border-slate-200 px-4 py-3 text-sm text-slate-900 transition-colors placeholder:text-slate-300 focus:border-blue-400 focus:outline-none"
+                  disabled={isSubmitting}
+                  className={inputClassName}
                 />
               </div>
               <div className="flex flex-col gap-2">
-                <label className="text-xs tracking-wide text-slate-500 uppercase">
+                <label
+                  htmlFor="contact-message"
+                  className="text-xs tracking-wide text-slate-500 uppercase"
+                >
                   Сообщение
                 </label>
                 <textarea
+                  id="contact-message"
+                  name="message"
                   rows={4}
+                  maxLength={2000}
                   placeholder="Расскажите о вашем проекте или активе..."
-                  className="resize-none border border-slate-200 px-4 py-3 text-sm text-slate-900 transition-colors placeholder:text-slate-300 focus:border-blue-400 focus:outline-none"
+                  disabled={isSubmitting}
+                  className={`${inputClassName} resize-none`}
                 />
               </div>
               <button
                 type="submit"
-                className="mt-2 flex items-center justify-center gap-3 bg-blue-600 py-4 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700"
+                disabled={isSubmitting}
+                className="mt-2 flex items-center justify-center gap-3 bg-blue-600 py-4 text-sm font-medium text-white transition-colors duration-200 hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-slate-400"
               >
-                Отправить заявку
-                <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                {isSubmitting ? "Отправляем..." : "Отправить заявку"}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 14 14"
+                  fill="none"
+                  aria-hidden="true"
+                >
                   <path
                     d="M2.5 7h9M8 3.5L11.5 7 8 10.5"
                     stroke="currentColor"
@@ -134,6 +240,17 @@ export function Contact() {
                   />
                 </svg>
               </button>
+              <div aria-live="polite" aria-atomic="true" className="min-h-6">
+                {feedback ? (
+                  <p
+                    className={`text-sm leading-relaxed ${
+                      status === "success" ? "text-blue-700" : "text-red-700"
+                    }`}
+                  >
+                    {feedback}
+                  </p>
+                ) : null}
+              </div>
             </form>
           </Animate>
         </div>
