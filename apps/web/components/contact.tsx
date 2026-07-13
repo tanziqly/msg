@@ -4,9 +4,9 @@ import { Animate } from "@/components/animate"
 
 export function Contact() {
   return (
-    <section id="contact" className="bg-slate-900 py-28 lg:py-36">
-      <div className="mx-auto max-w-[1400px] px-6 lg:px-16">
-        <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2">
+    <section id="contact" className="bg-slate-900 py-20 sm:py-28 lg:py-36">
+      <div className="mx-auto w-full max-w-[1400px] px-4 sm:px-6 lg:px-16">
+        <div className="grid min-w-0 grid-cols-1 items-start gap-12 lg:grid-cols-2 lg:gap-16">
           <Animate direction="left">
             <div>
               <div className="mb-8 flex items-center gap-4">
@@ -71,7 +71,7 @@ export function Contact() {
 
           <Animate direction="right">
             <form
-              className="flex flex-col gap-5 bg-white p-8 lg:p-10"
+              className="flex min-w-0 flex-col gap-5 bg-white p-5 sm:p-8 lg:p-10"
               onSubmit={(e) => e.preventDefault()}
             >
               <h3 className="mb-2 text-xl font-medium text-slate-900">

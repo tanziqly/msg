@@ -28,7 +28,7 @@ export function Nav() {
           : "bg-white/60 backdrop-blur-sm"
       }`}
     >
-      <nav className="max-w-[1400px] mx-auto px-6 lg:px-16 h-16 flex items-center justify-between">
+      <nav className="mx-auto flex h-16 w-full max-w-[1400px] items-center justify-between px-4 sm:px-6 lg:px-16">
         <a href="#" className="text-slate-900 font-bold text-xl tracking-widest uppercase">
           MSG
         </a>
