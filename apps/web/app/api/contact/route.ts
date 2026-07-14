@@ -1,6 +1,12 @@
 import { NextResponse } from "next/server"
+import { fetch as proxyFetch, ProxyAgent } from "undici"
 
 export const runtime = "nodejs"
+
+const telegramProxyUrl = process.env.TELEGRAM_PROXY_URL?.trim()
+const telegramProxyAgent = telegramProxyUrl
+  ? new ProxyAgent(telegramProxyUrl)
+  : undefined
 
 const limits = {
   name: 100,
@@ -96,10 +102,11 @@ export async function POST(request: Request) {
   try {
     const results = await Promise.all(
       recipientIds.map(async (chatId) => {
-        const response = await fetch(
+        const response = await proxyFetch(
           `https://api.telegram.org/bot${token}/sendMessage`,
           {
             method: "POST",
+            dispatcher: telegramProxyAgent,
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               chat_id: chatId,

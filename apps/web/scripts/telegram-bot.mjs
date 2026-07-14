@@ -1,3 +1,5 @@
+import { fetch as proxyFetch, ProxyAgent } from "undici"
+
 const token = process.env.TELEGRAM_BOT_TOKEN
 
 if (!token) {
@@ -6,13 +8,18 @@ if (!token) {
 }
 
 const apiUrl = `https://api.telegram.org/bot${token}`
+const telegramProxyUrl = process.env.TELEGRAM_PROXY_URL?.trim()
+const telegramProxyAgent = telegramProxyUrl
+  ? new ProxyAgent(telegramProxyUrl)
+  : undefined
 const getIdCallback = "get_tg_id"
 let offset = 0
 let isStopping = false
 
 async function callTelegram(method, payload = {}) {
-  const response = await fetch(`${apiUrl}/${method}`, {
+  const response = await proxyFetch(`${apiUrl}/${method}`, {
     method: "POST",
+    dispatcher: telegramProxyAgent,
     headers: { "content-type": "application/json" },
     body: JSON.stringify(payload),
   })

@@ -9,6 +9,7 @@ services:
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?TELEGRAM_BOT_TOKEN is required}
       TELEGRAM_RECIPIENT_IDS: ${TELEGRAM_RECIPIENT_IDS:?TELEGRAM_RECIPIENT_IDS is required}
+      TELEGRAM_PROXY_URL: ${TELEGRAM_PROXY_URL:-}
     ports:
       - "127.0.0.1:${WEB_PORT:-3000}:3000"
     healthcheck:
@@ -35,6 +36,7 @@ services:
     restart: unless-stopped
     environment:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN:?TELEGRAM_BOT_TOKEN is required}
+      TELEGRAM_PROXY_URL: ${TELEGRAM_PROXY_URL:-}
     depends_on:
       web:
         condition: service_healthy
