@@ -30,11 +30,11 @@ USER nextjs
 EXPOSE 3000
 CMD ["node", "apps/web/server.js"]
 
-FROM node:22-alpine AS bot
+FROM deps AS bot
 ENV NODE_ENV=production
-WORKDIR /app
+WORKDIR /app/apps/web
 RUN addgroup --system --gid 1001 nodejs \
   && adduser --system --uid 1001 bot
-COPY --from=builder --chown=bot:nodejs /app/apps/web/scripts/telegram-bot.mjs ./telegram-bot.mjs
+COPY --chown=bot:nodejs apps/web/scripts/telegram-bot.mjs ./scripts/telegram-bot.mjs
 USER bot
-CMD ["node", "telegram-bot.mjs"]
+CMD ["node", "scripts/telegram-bot.mjs"]
