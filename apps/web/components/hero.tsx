@@ -60,12 +60,12 @@ export function Hero() {
       />
 
       {/* 3. Контент — элементы выплывают поочерёдно */}
-      <div className="relative flex-1 max-w-[1400px] mx-auto px-6 lg:px-16 w-full pt-28 pb-16 flex flex-col justify-center">
-        <div className="max-w-[640px]">
+      <div className="relative mx-auto flex w-full max-w-[1400px] flex-1 flex-col justify-center px-4 pt-24 pb-10 sm:px-6 sm:pt-28 sm:pb-16 lg:px-16">
+        <div className="min-w-0 max-w-[640px]">
 
           {/* Лейбл */}
           <motion.div
-            className="flex items-center gap-3 mb-8"
+            className="mb-6 flex min-w-0 items-start gap-3 sm:mb-8 sm:items-center"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 1.0, ease: "easeOut" }}
