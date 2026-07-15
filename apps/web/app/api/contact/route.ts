@@ -99,37 +99,52 @@ export async function POST(request: Request) {
     `<b>Сообщение:</b> ${escapeTelegramHtml(message || "Не указано")}`,
   ].join("\n")
 
-  try {
-    const results = await Promise.all(
-      recipientIds.map(async (chatId) => {
-        const response = await proxyFetch(
-          `https://api.telegram.org/bot${token}/sendMessage`,
-          {
-            method: "POST",
-            dispatcher: telegramProxyAgent,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              chat_id: chatId,
-              text,
-              parse_mode: "HTML",
-              disable_web_page_preview: true,
-            }),
-            cache: "no-store",
-          },
-        )
+  const results = await Promise.allSettled(
+    recipientIds.map(async (chatId) => {
+      const response = await proxyFetch(
+        `https://api.telegram.org/bot${token}/sendMessage`,
+        {
+          method: "POST",
+          dispatcher: telegramProxyAgent,
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            chat_id: chatId,
+            text,
+            parse_mode: "HTML",
+            disable_web_page_preview: true,
+          }),
+          cache: "no-store",
+        },
+      )
 
-        if (!response.ok) {
-          throw new Error("Telegram delivery failed")
-        }
-      }),
-    )
+      if (!response.ok) {
+        const result = (await response.json().catch(() => null)) as {
+          description?: string
+        } | null
+        throw new Error(result?.description || `Telegram HTTP ${response.status}`)
+      }
 
-    void results
-    return NextResponse.json({ success: true })
-  } catch {
+      return chatId
+    }),
+  )
+
+  const delivered = results.filter((result) => result.status === "fulfilled")
+  const failed = results.flatMap((result, index) =>
+    result.status === "rejected"
+      ? [{ chatId: recipientIds[index], reason: String(result.reason) }]
+      : [],
+  )
+
+  if (failed.length > 0) {
+    console.error("[contact] Telegram delivery failed for recipients", failed)
+  }
+
+  if (delivered.length === 0) {
     return NextResponse.json(
       { error: "Не удалось отправить заявку. Попробуйте ещё раз." },
       { status: 502 },
     )
   }
+
+  return NextResponse.json({ success: true })
 }
