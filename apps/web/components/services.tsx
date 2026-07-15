@@ -3,7 +3,7 @@
 import { Animate } from "@/components/animate"
 import { motion } from "framer-motion"
 
-import buildingImage from "@/public/services/building.png"
+import buildingImage from "@/public/services/building.jpg"
 
 const services = [
   {
